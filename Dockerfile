@@ -28,7 +28,7 @@ ARG APP_ENV=production
 ENV APP_ENV=${APP_ENV}
 
 # Exponer puerto usado por Artisan
-EXPOSE 8000
+EXPOSE 80
 
 # Comando de inicio con php artisan serve
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=80"]
