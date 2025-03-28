@@ -1,8 +1,7 @@
-FROM php:8.2-fpm
+FROM php:8.2-cli
 
 # Instalar dependencias del sistema
 RUN apt-get update && apt-get install -y \
-    supervisor \
     unzip \
     git \
     curl \
@@ -24,15 +23,12 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 # Instalar dependencias de Laravel
 RUN composer install --no-dev --optimize-autoloader
 
-# Copiar configuración de Supervisor
-COPY .docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
-# Configurar variables de entorno (usar archivo .env en el contenedor)
+# Configurar variables de entorno
 ARG APP_ENV=production
 ENV APP_ENV=${APP_ENV}
 
-# Exponer puertos
-EXPOSE 9000
+# Exponer puerto usado por Artisan
+EXPOSE 8000
 
-# Comando de inicio
-CMD ["php-fpm"]
+# Comando de inicio con php artisan serve
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
