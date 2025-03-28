@@ -2,7 +2,6 @@ FROM php:8.2-fpm
 
 # Instalar dependencias del sistema
 RUN apt-get update && apt-get install -y \
-    nginx \
     supervisor \
     unzip \
     git \
@@ -25,16 +24,15 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 # Instalar dependencias de Laravel
 RUN composer install --no-dev --optimize-autoloader
 
-# Copiar configuración de Nginx
-COPY .docker/nginx.conf /etc/nginx/nginx.conf
-COPY .docker/default.conf /etc/nginx/sites-available/default
-RUN ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
-
 # Copiar configuración de Supervisor
 COPY .docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
+# Configurar variables de entorno (usar archivo .env en el contenedor)
+ARG APP_ENV=production
+ENV APP_ENV=${APP_ENV}
+
 # Exponer puertos
-EXPOSE 80
+EXPOSE 9000
 
 # Comando de inicio
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+CMD ["php-fpm"]
