@@ -33,10 +33,6 @@ RUN ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
 # Copiar configuración de Supervisor
 COPY .docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-# Configurar variables de entorno (usar archivo .env en el contenedor)
-ARG APP_ENV=production
-ENV APP_ENV=${APP_ENV}
-
 # Exponer puertos
 EXPOSE 80
 
